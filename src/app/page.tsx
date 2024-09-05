@@ -20,7 +20,7 @@ export default function Page() {
 function Login() {
   return (
     <div className="w-screen h-screen pt-[120px] pl-[280px] bg-[#F5F7F8]">
-      <div className="w-[1000px] h-[500px] flex rounded-[20px] pt-[25px] pl-[50px] bg-[#0A6847]">
+      <div className="w-[1000px] h-[500px] flex rounded-[20px] pt-[25px] pl-[50px] bg-[#0A6847] shadow-md">
         <div className="w-[450px] h-[450px]">
           <Image
             src={"/gmbr-login.png"}
@@ -81,7 +81,7 @@ function Login() {
           </div>
 
           <div className="w-[400px] h-[50px] items-center flex justify-center mt-[15px] ">
-            <button className="w-[150px] h-[35px] bg-[#0A6847] rounded-[10px] text-[#F5F7F8] text-[16px] font-medium hover:bg-gray-300 ">
+            <button className="w-[300px] h-[40px] bg-[#0A6847] rounded-[10px] text-[#F5F7F8] text-[16px] font-medium hover:bg-gray-300 ">
               Masuk
             </button>
           </div>
