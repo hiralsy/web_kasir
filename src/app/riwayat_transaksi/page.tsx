@@ -73,27 +73,27 @@ export default function StokBarang() {
           <div className="bg-yellow-300 w-[1250px] h-[530px] flex p-[5px]">
             <div className="bg-red-500 w-[1240px] h-[520px] rounded-[10px] shadow-sm ">
               <div className="w-[1240px] h-[50px] bg-[#0A6847] rounded-tl-[10px] rounded-tr-[10px] flex justify-between ">
-                <div className="w-[240px] h h-full bg-orange-700 flex items-center justify-center ">
+                <div className="w-[240px] h-full bg-orange-700 flex items-center justify-center ">
                   <span className="text-[17px] font-[500] text-[#F5F7F8] ">
                     Kode Transaksi
                   </span>
                 </div>
-                <div className="w-[240px] h h-full bg-orange-200 flex items-center justify-center">
+                <div className="w-[240px] h-full bg-orange-200 flex items-center justify-center">
                   <span className="text-[17px] font-[500] text-[#F5F7F8] ">
                     Tanggal
                   </span>
                 </div>
-                <div className="w-[240px] h h-full bg-orange-300 flex items-center justify-center">
+                <div className="w-[240px] h-full bg-orange-300 flex items-center justify-center">
                   <span className="text-[17px] font-[500] text-[#F5F7F8] ">
                     Nama
                   </span>
                 </div>
-                <div className="w-[240px] h h-full bg-orange-400 flex items-center justify-center">
+                <div className="w-[240px] h-full bg-orange-400 flex items-center justify-center">
                   <span className="text-[17px] font-[500] text-[#F5F7F8] ">
                     Total Harga
                   </span>
                 </div>
-                <div className="w-[240px] h h-full bg-orange-500 flex items-center justify-center">
+                <div className="w-[240px] h-full bg-orange-500 flex items-center justify-center">
                   <span className="text-[17px] font-[500] text-[#F5F7F8] ">
                     Aksi
                   </span>
