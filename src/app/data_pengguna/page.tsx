@@ -40,7 +40,23 @@ export default function DataPengguna() {
           </div>
           <div className="w-full h-[530px] p-[5px] bg-blue-400">
             <div className="w-[1240px] h-[520px] rounded-[10px] shadow-sm bg-yellow-200">
-              <div className="w-full h-[50px] bg-gray-300 rounded-tl-[10px] rounded-tr-[10px] "></div>
+              <div className="w-full h-[50px] bg-gray-300 rounded-tl-[10px] rounded-tr-[10px] flex justify-between ">
+                <div className="w-[230px] h-[50px] items-center justify-center flex bg-red-300 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">ID</span>
+                </div>
+                <div className="w-[230px] h-[50px] items-center justify-center flex bg-red-200 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Nama Pengguna</span>
+                </div>
+                <div className="w-[230px] h-[50px] items-center justify-center flex ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Kata Sandi</span>
+                </div>
+                <div className="w-[230px] h-[50px] items-center justify-center flex ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Hak Akses</span>
+                </div>
+                <div className="w-[230px] h-[50px] items-center justify-center flex ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Aksi</span>
+                </div>
+              </div>
               <div className="w-[1240px] h-[470px] rounded-bl-[10px] bg-red-300 overflow-y-auto no-scrollbar"></div>
             </div>
           </div>
