@@ -40,24 +40,76 @@ export default function DataPengguna() {
           </div>
           <div className="w-full h-[530px] p-[5px] bg-blue-400">
             <div className="w-[1240px] h-[520px] rounded-[10px] shadow-sm bg-yellow-200">
-              <div className="w-full h-[50px] bg-gray-300 rounded-tl-[10px] rounded-tr-[10px] flex justify-between ">
-                <div className="w-[230px] h-[50px] items-center justify-center flex bg-red-300 ">
-                  <span className="text-[17px] font-[500] text-[#F5F7F8]">ID</span>
+              <div className="w-full h-[50px] bg-[#0A6847] rounded-tl-[10px] rounded-tr-[10px] flex justify-between ">
+                <div className="w-[240px] h-[50px] items-center justify-center flex bg-red-300 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">
+                    ID
+                  </span>
                 </div>
-                <div className="w-[230px] h-[50px] items-center justify-center flex bg-red-200 ">
-                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Nama Pengguna</span>
+                <div className="w-[240px] h-[50px] items-center justify-center flex bg-red-200 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">
+                    Nama Pengguna
+                  </span>
                 </div>
-                <div className="w-[230px] h-[50px] items-center justify-center flex ">
-                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Kata Sandi</span>
+                <div className="w-[240px] h-[50px] items-center justify-center flex bg-yellow-200 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">
+                    Kata Sandi
+                  </span>
                 </div>
-                <div className="w-[230px] h-[50px] items-center justify-center flex ">
-                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Hak Akses</span>
+                <div className="w-[240px] h-[50px] items-center justify-center flex bg-yellow-300 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">
+                    Hak Akses
+                  </span>
                 </div>
-                <div className="w-[230px] h-[50px] items-center justify-center flex ">
-                  <span className="text-[17px] font-[500] text-[#F5F7F8]">Aksi</span>
+                <div className="w-[240px] h-[50px] items-center justify-center flex bg-yellow-400 ">
+                  <span className="text-[17px] font-[500] text-[#F5F7F8]">
+                    Aksi
+                  </span>
                 </div>
               </div>
-              <div className="w-[1240px] h-[470px] rounded-bl-[10px] bg-red-300 overflow-y-auto no-scrollbar"></div>
+              <div className="w-[1240px] h-[470px] rounded-bl-[10px] bg-red-300 overflow-y-auto no-scrollbar">
+                <div className="w-[1240px] h-[50px]  border-b-2 border-gray-300 flex justify-between items-center ">
+                  <div className="w-[240px] h-[45px] bg-blue-100 flex items-center justify-center ">
+                    <span className="text-[16px] font-[500] ">01</span>
+                  </div>
+                  <div className="w-[240px] h-[45px] bg-blue-200 flex items-center justify-center ">
+                    <span className="text-[16px] font-[500] ">Hira Lusy</span>
+                  </div>
+                  <div className="w-[240px] h-[45px] bg-blue-300 flex items-center justify-center ">
+                    <span className="text-[16px] font-[500] ">petugas1</span>
+                  </div>
+                  <div className="w-[240px] h-[45px] bg-blue-400 flex items-center justify-center ">
+                    <span className="text-[16px] font-[500] ">petugas</span>
+                  </div>
+                  <div className="w-[240px] h-[45px] bg-blue-500 flex items-center justify-center ">
+                  <div className="w-[130px] h-[40px] bg-red-100 flex items-center justify-center ">
+                      <div className="w-[32px] h-[32px] items-center flex justify-center mr-[10px] hover:bg-gray-300 rounded-[5px] bg-violet-400 ">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="28"
+                          height="28"
+                          fill="#0A6847"
+                          viewBox="0 0 256 256"
+                        >
+                          <path d="M230.14,70.54,185.46,25.85a20,20,0,0,0-28.29,0L33.86,149.17A19.85,19.85,0,0,0,28,163.31V208a20,20,0,0,0,20,20H92.69a19.86,19.86,0,0,0,14.14-5.86L230.14,98.82a20,20,0,0,0,0-28.28ZM91,204H52V165l84-84,39,39ZM192,103,153,64l18.34-18.34,39,39Z"></path>
+                        </svg>
+                      </div>
+
+                      <div className="w-[32px] h-[32px] items-center flex justify-center hover:bg-gray-300 rounded-[5px] bg-violet-700 ">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="28"
+                          height="28"
+                          fill="#EB0A0A"
+                          viewBox="0 0 256 256"
+                        >
+                          <path d="M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
