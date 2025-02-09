@@ -103,9 +103,6 @@ export default function StokBarang() {
                     nama produk nama produk roti bakery waffle apalah apalah
                     meni hmm
                   </div>
-                  {/* <div className="w-[250px] h-[20px] text-[14px] font-semibold text-[#D9D9D9] ">
-                    kategori
-                  </div> */}
                   <div className="w-[250px] h-[30px] flex bg-blue-400   ">
                     <div className="w-[25px] h-full text-[16px] text-[#0A6748] font-medium bg-yellow-300 items-center flex ">
                       Rp
