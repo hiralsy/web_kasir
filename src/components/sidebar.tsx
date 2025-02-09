@@ -14,8 +14,8 @@ export default function Sidebar() {
     <div className="w-[250px] h-screen bg-[#0A6847]/50 fixed ">
       <div className="w-[216px] h-[120px] content-center ">
         <Image
-          src={"/caisse.png"}
-          className="w-[150px] h-[73px] ml-[30px] "
+          src={"/caisse-logo2.png"}
+          className="w-[160px] h-[73px] ml-[30px] "
           width={0}
           height={0}
           alt={"logo"}

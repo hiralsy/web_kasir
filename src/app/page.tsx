@@ -1,4 +1,3 @@
-
 import { Poppins } from "next/font/google";
 import Image from "next/image";
 import { useState } from "react";
@@ -31,11 +30,11 @@ function Login() {
             unoptimized
           />
         </div>
-        <div className="w-[400px] h-[400px] mt-[25px] ml-[50px] rounded-[10px] bg-[#FFFFFF]">
-          <div className="">
+        <div className="w-[400px] h-[400px] mt-[25px] ml-[50px] rounded-[10px] bg-[#FFFFFF] content-center">
+          <div className="items-center flex justify-center">
             <Image
               src={"/caisse-logo2.png"}
-              className="w-[200px] h-[95px] mt-[50px] ml-[100px]"
+              className="w-[160px] h-[73px]"
               width={0}
               height={0}
               alt={""}
