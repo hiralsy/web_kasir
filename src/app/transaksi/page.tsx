@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; /*buat nge navigasi transaksi bayar*/
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 
@@ -12,6 +12,7 @@ export default function Transaksi() {
   const [showEmptyCartAlert, setShowEmptyCartAlert] = useState(false);
   const router = useRouter();
 
+  /*produk*/
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -43,6 +44,7 @@ export default function Transaksi() {
     },
   ]);
 
+  /*nambah pesanan*/
   const addToCart = (product) => {
     if (product.stock === 0) return;
 
@@ -113,7 +115,8 @@ export default function Transaksi() {
     if (cart.length === 0) {
       setShowEmptyCartAlert(true);
     } else {
-      router.push("/transaksi/transaksi_bayar");
+      localStorage.setItem("cart", JSON.stringify(cart)); // Simpan keranjang ke localStorage
+      router.push("/transaksi/transaksi_bayar"); // Navigasi ke halaman bayar
     }
   };
 
@@ -151,7 +154,7 @@ export default function Transaksi() {
                     className={`flex items-center p-3 border-2 rounded-lg gap-3 w-full ${
                       product.stock === 0
                         ? "bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed"
-                        : "bg-white text-[#C14600] border-[#C14600] hover:bg-[#C14600]/25"
+                        : "bg-white text-[#C14600] border-[#674636] hover:bg-[#C14600]/25"
                     }`}
                   >
                     <img
@@ -178,8 +181,10 @@ export default function Transaksi() {
                 ))}
             </div>
           </div>
-          <div className="w-[40%] bg-[#FFF8E8] border-2 border-[#674636] rounded-md p-4">
-            <h2 className="text-[28px] mb-4 border-b-2">Pesanan</h2>
+          <div className="w-[40%] bg-[#FFF8E8] border-2 border-[#674636] rounded-md p-4 ">
+            <h2 className="text-[28px] mb-4 border-b-2 border-[#674636] text-[#674636] font-semibold">
+              Pesanan
+            </h2>
             <ul className="space-y-2">
               {cart.length === 0 && (
                 <li className="text-gray-500 italic text-center">
@@ -191,18 +196,21 @@ export default function Transaksi() {
                   key={item.id}
                   className="flex justify-between items-center border-b pb-2"
                 >
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium w-40">{item.name}</span>
 
-                  <div className="flex items-center gap-2">
+                  {/* Container untuk tombol - angka + */}
+                  <div className="flex items-center justify-center gap-2 w-28">
                     <button
-                      className="bg-red-500 text-white px-2 rounded-md"
+                      className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-md"
                       onClick={() => updateQty(item.id, item.qty - 1)}
                     >
                       −
                     </button>
-                    <span className="font-semibold">{item.qty}</span>
+                    <span className="font-semibold w-6 text-center">
+                      {item.qty}
+                    </span>
                     <button
-                      className={`px-2 rounded-md text-white ${
+                      className={`w-8 h-8 flex items-center justify-center rounded-md text-white ${
                         products.find((p) => p.id === item.id)?.stock === 0
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-green-500"
@@ -216,7 +224,7 @@ export default function Transaksi() {
                     </button>
                   </div>
 
-                  <span className="font-semibold">
+                  <span className="font-semibold w-24 text-right">
                     Rp{(item.qty * item.price).toLocaleString("id-ID")}
                   </span>
                 </li>

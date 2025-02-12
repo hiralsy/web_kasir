@@ -1,3 +1,5 @@
+"use client";
+
 import { Roboto } from "next/font/google";
 import Image from "next/image";
 import NavLink from "./NavLink";
