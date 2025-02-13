@@ -40,21 +40,83 @@ export default function StokBarang() {
     },
   ]);
 
+  // State untuk modal tambah produk
+  const [addProductModal, setAddProductModal] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    stock: "",
+    image: null as File | null,
+    previewImage: null as string | null,
+  });
+
+  // Fungsi untuk menangani perubahan input tambah produk
+  const handleNewProductChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    setNewProduct({ ...newProduct, [field]: e.target.value });
+  };
+
+  // Fungsi untuk menangani upload gambar produk baru
+  const handleNewProductImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewProduct({
+        ...newProduct,
+        image: file,
+        previewImage: URL.createObjectURL(file),
+      });
+    }
+  };
+
+  // Fungsi untuk menyimpan produk baru
+  const handleSaveNewProduct = () => {
+    if (!newProduct.name || !newProduct.price || !newProduct.stock) {
+      alert("Harap lengkapi semua bidang!");
+      return;
+    }
+
+    const newId = products.length + 1;
+    setProducts([
+      ...products,
+      {
+        id: newId,
+        name: newProduct.name,
+        price: Number(newProduct.price),
+        stock: Number(newProduct.stock),
+        image: newProduct.previewImage || "/placeholder.jpg", // Gunakan gambar placeholder jika tidak ada
+      },
+    ]);
+
+    // Reset state modal dan tutup modal
+    setNewProduct({
+      name: "",
+      price: "",
+      stock: "",
+      image: null,
+      previewImage: null,
+    });
+    setAddProductModal(false);
+  };
+
   // State untuk barang yang sedang diedit
   const [editProduct, setEditProduct] = useState<null | any>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // Fungsi untuk menangani edit barang
+  // Fungsi untuk menangani edit produk
   const handleEdit = (item: Product) => {
     setEditProduct(item); // Set produk yang sedang diedit
     setPreviewImage(item.image); // Set preview gambar
   };
 
-  // State untuk konfirmasi hapus barang
+  // State untuk konfirmasi hapus produk
   const [deleteProduct, setDeleteProduct] = useState<null | any>(null);
 
-  // Fungsi hapus barang
+  // Fungsi hapus produk
   const handleDelete = () => {
     if (!deleteProduct) return;
 
@@ -83,7 +145,7 @@ export default function StokBarang() {
     }
   };
 
-  // Fungsi simpan hasil edit barang
+  // Fungsi simpan hasil edit produk
   const handleSaveEdit = () => {
     setProducts((prevProducts) =>
       prevProducts.map((item) =>
@@ -109,7 +171,16 @@ export default function StokBarang() {
       <div className="flex-1">
         <Navbar />
         <div className="mt-[92px] h-[calc(100%-92px)] shadow-md rounded-md p-3">
-          {/* Input Cari  dan Tambah Barang */}
+          {/* Input Cari  dan Tambah produk */}
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl font-semibold">Stok Produk</h1>
+            <button
+              className="px-4 py-2 bg-[#3BB146] text-white rounded-lg hover:bg-gray-300"
+              onClick={() => setAddProductModal(true)}
+            >
+              Tambahkan Produk
+            </button>
+          </div>
           <div className="flex justify-between items-center my-4">
             <input
               type="text"
@@ -118,9 +189,6 @@ export default function StokBarang() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-[60%] p-2 border-2 border-gray-400 rounded-lg focus:border-[#C14600] outline-none"
             />
-            <button className="px-4 py-2 bg-[#3BB146] text-white rounded-lg hover:bg-gray-300">
-              Tambahkan Barang
-            </button>
           </div>
 
           {/* Tabel Stok Barang */}
@@ -153,9 +221,11 @@ export default function StokBarang() {
                       item.name.toLowerCase().includes(search.toLowerCase())
                     )
                     .map((item) => (
-                      <tr key={item.id}>
-                        <td className="p-1 border text-center">{item.id}</td>
-                        <td className="p-1 border-b flex items-center gap-2">
+                      <tr key={item.id} className="w-[100%]">
+                        <td className="w-[5%] p-1 border text-center">
+                          {item.id}
+                        </td>
+                        <td className="w-full p-1 border-b flex items-center gap-2">
                           <Image
                             src={item.image}
                             alt={item.name}
@@ -165,21 +235,23 @@ export default function StokBarang() {
                           />
                           <p className="line-clamp-1">{item.name}</p>
                         </td>
-                        <td className="px-2 py-1 border">
+                        <td className="w-[15%] px-2 py-1 border">
                           Rp{item.price.toLocaleString("id-ID")}
                         </td>
-                        <td className="p-1 border text-center">{item.stock}</td>
-                        <td className="p-1 border text-center">
+                        <td className="w-[10%] p-1 border text-center">
+                          {item.stock}
+                        </td>
+                        <td className="w-[15%] p-1 border text-center">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="bg-[#C14600] text-white px-3 py-1 rounded-lg mr-2"
+                            className="w-[80px] bg-[#C14600] text-white px-3 py-1 rounded-lg mr-2"
                           >
                             Edit
                           </button>
 
                           <button
                             onClick={() => setDeleteProduct(item)}
-                            className="bg-[#D30000] text-white px-3 py-1 rounded-lg"
+                            className="w-[80px] bg-[#D30000] text-white px-3 py-1 rounded-lg"
                           >
                             Hapus
                           </button>
@@ -193,22 +265,96 @@ export default function StokBarang() {
         </div>
       </div>
 
+      {/* Modal Tambah Produk */}
+      {addProductModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-9999">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              Tambah Produk
+            </h2>
+
+            {/* Preview Gambar */}
+            <p className="text-[14px] text-gray-400">Gambar Produk</p>
+            {newProduct.previewImage && (
+              <Image
+                src={newProduct.previewImage}
+                alt="Preview"
+                width={100}
+                height={100}
+                className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
+              />
+            )}
+
+            {/* Input Upload Gambar */}
+            <input
+              type="file"
+              accept="image/*"
+              className="mb-3"
+              onChange={handleNewProductImageUpload}
+            />
+
+            <p className="text-[14px] text-gray-400">Nama Produk</p>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => handleNewProductChange(e, "name")}
+              className="w-full p-2 border rounded-lg mb-3"
+              placeholder="Nama Produk"
+            />
+
+            <p className="text-[14px] text-gray-400">Harga Produk</p>
+            <input
+              type="number"
+              value={newProduct.price}
+              onChange={(e) => handleNewProductChange(e, "price")}
+              className="w-full p-2 border rounded-lg mb-3"
+              placeholder="Harga"
+            />
+
+            <p className="text-[14px] text-gray-400">Stok Produk</p>
+            <input
+              type="number"
+              value={newProduct.stock}
+              onChange={(e) => handleNewProductChange(e, "stock")}
+              className="w-full p-2 border rounded-lg mb-3"
+              placeholder="Stok"
+            />
+
+            <div className="flex justify-between">
+              <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                onClick={() => setAddProductModal(false)}
+              >
+                Batal
+              </button>
+              <button
+                className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                onClick={handleSaveNewProduct}
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modal Edit Barang */}
       {editProduct && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-9999">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Edit Barang
+            <h2 className="text-xl font-bold text-gray-800 border-b-2 mb-3 pb-2">
+              Edit Produk
             </h2>
 
             {/* Preview Gambar */}
+            <p className="text-[14px] text-gray-400">Gambar Produk</p>
             {previewImage && (
               <Image
                 src={previewImage}
                 alt="Preview"
                 width={100}
                 height={100}
-                className="w-[100px] h-[100px] mb-3 rounded-md object-cover"
+                className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
               />
             )}
 
@@ -220,6 +366,7 @@ export default function StokBarang() {
               onChange={handleImageUpload}
             />
 
+            <p className="text-[14px] text-gray-400">Nama Produk</p>
             <input
               type="text"
               value={editProduct.name}
@@ -227,6 +374,8 @@ export default function StokBarang() {
               className="w-full p-2 border rounded-lg mb-3"
               placeholder="Nama Produk"
             />
+
+            <p className="text-[14px] text-gray-400">Harga Produk</p>
             <input
               type="number"
               value={editProduct.price}
@@ -234,6 +383,8 @@ export default function StokBarang() {
               className="w-full p-2 border rounded-lg mb-3"
               placeholder="Harga"
             />
+
+            <p className="text-[14px] text-gray-400">Stok Produk</p>
             <input
               type="number"
               value={editProduct.stock}
@@ -241,15 +392,15 @@ export default function StokBarang() {
               className="w-full p-2 border rounded-lg mb-3"
               placeholder="Stok"
             />
-            <div className="flex justify-between">
+            <div className="flex justify-between w-[100%] space-x-3">
               <button
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                className="w-[50%] px-4 py-2 bg-gray-500 text-white rounded-lg"
                 onClick={() => setEditProduct(null)}
               >
                 Batal
               </button>
               <button
-                className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                className="w-[50%] px-4 py-2 bg-green-500 text-white rounded-lg"
                 onClick={handleSaveEdit}
               >
                 Simpan
@@ -264,7 +415,7 @@ export default function StokBarang() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-[9999]">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Hapus Barang
+              Hapus Produk
             </h2>
             <p className="text-gray-600">
               Apakah Anda yakin ingin menghapus{" "}

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 export default function Sidebar() {
   return (
-    <div className="w-[200px] h-full bg-[#AAB396] px-2 py-4 space-y-6 rounded-md ">
+    <div className="w-[220px] h-full bg-[#AAB396] px-3 py-4 space-y-6 rounded-md ">
       <div className="flex items-center justify-center ">
         <Image
           src={"/caisse-logo2.png"}
@@ -25,7 +25,7 @@ export default function Sidebar() {
         <li className="h-[45px]">
           <NavLink
             href="/beranda"
-            className="h-[45px] flex items-center space-x-1 rounded-[10px] hover:bg-[#674636] [&.active]:bg-[#674636]"
+            className="h-[45px] flex items-center space-x-1 rounded-lg hover:bg-[#674636] [&.active]:bg-[#674636]"
           >
             <div className="pl-2">
               <svg
@@ -47,7 +47,7 @@ export default function Sidebar() {
         <li className=" h-[45px] ">
           <NavLink
             href="/transaksi"
-            className="h-[45px] flex items-center rounded-[10px] space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636]"
+            className="h-[45px] flex items-center rounded-lg space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636]"
           >
             <div className="pl-2">
               <svg
@@ -68,8 +68,8 @@ export default function Sidebar() {
 
         <li className="h-[45px] ">
           <NavLink
-            href="/stok_barang"
-            className="flex h-[45px] items-center rounded-[10px] space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636]"
+            href="/stok_produk"
+            className="flex h-[45px] items-center rounded-lg space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636]"
           >
             <div className="pl-2">
               <svg
@@ -83,15 +83,15 @@ export default function Sidebar() {
               </svg>
             </div>
             <div className="text-[#FFFFFF] font-medium text-[16px]">
-              <p>Stok Barang</p>
+              <p>Stok Produk</p>
             </div>
           </NavLink>
         </li>
 
         <li className="h-[45px]">
           <NavLink
-            href="/member"
-            className="flex h-[45px] items-center rounded-[10px] space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
+            href="/data_pelanggan"
+            className="flex h-[45px] items-center rounded-lg space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
           >
             <div className="pl-2">
               <svg
@@ -105,7 +105,7 @@ export default function Sidebar() {
               </svg>
             </div>
             <div className="text-[#FFFFFF] font-medium text-[16px]">
-              <p>Member</p>
+              <p>Data Pelanggan</p>
             </div>
           </NavLink>
         </li>
@@ -113,7 +113,7 @@ export default function Sidebar() {
         <li className="h-[45px] ">
           <NavLink
             href="/data_pengguna"
-            className="flex h-[45px] items-center rounded-[10px] space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
+            className="flex h-[45px] items-center rounded-lg space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
           >
             <div className="pl-2">
               <svg
@@ -135,7 +135,7 @@ export default function Sidebar() {
         <li className="h-[45px] ">
           <NavLink
             href="/riwayat_transaksi"
-            className="flex h-[45px] items-center rounded-[10px] space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
+            className="flex h-[45px] items-center rounded-lg space-x-1 hover:bg-[#674636] [&.active]:bg-[#674636] "
           >
             <div className="pl-2">
               <svg

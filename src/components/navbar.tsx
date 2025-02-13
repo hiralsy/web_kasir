@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed w-[calc(100%-238px)] h-[80px] shadow-md border-2 border-[#674636] items-center justify-between flex rounded-md p-3">
+    <nav className="fixed w-[calc(100%-256px)] h-[80px] shadow-md border-2 border-[#674636] items-center justify-between flex rounded-md p-3">
       {/* Nama Perusahaan */}
       <p className="text-[32px] font-bold text-[#674636]">Lusy Bakery</p>
 
