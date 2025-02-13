@@ -1,16 +1,12 @@
 "use client";
 
-import { Roboto } from "next/font/google";
+
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["100", "300", "400", "500", "700", "900"],
-});
+
 
 export default function Home() {
   return (
@@ -24,7 +20,9 @@ export default function Home() {
         <Navbar />
 
         {/* Konten utama */}
-        <div className="mt-[92px] p-3 bg-white shadow-md rounded-md">content beranda</div>
+        <div className="mt-[92px] p-3 bg-white shadow-md rounded-md">
+          content beranda
+        </div>
       </div>
     </div>
   );

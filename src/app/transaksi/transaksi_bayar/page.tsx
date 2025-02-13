@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 
 export default function TransaksiBayar() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<
+    { id: number; name: string; price: number; qty: number }[]
+  >([]);
   const totalHarga = cart.reduce(
     (total, item) => total + item.price * item.qty,
     0
@@ -12,7 +14,14 @@ export default function TransaksiBayar() {
   const [namaPelanggan, setNamaPelanggan] = useState("");
   const [nominalUang, setNominalUang] = useState("");
   const [kembalian, setKembalian] = useState(0);
-  const [struk, setStruk] = useState(null);
+  const [struk, setStruk] = useState<{
+    kodeTransaksi: string;
+    namaPelanggan: string;
+    items: { id: number; name: string; price: number; qty: number }[];
+    totalHarga: number;
+    nominalUang: number;
+    kembalian: number;
+  } | null>(null);
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
@@ -31,7 +40,7 @@ export default function TransaksiBayar() {
   };
 
   // Hitung kembalian secara otomatis
-  const handleNominalUangChange = (e) => {
+  const handleNominalUangChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uang = parseInt(e.target.value) || 0;
     setNominalUang(e.target.value);
     setKembalian(uang - totalHarga);
@@ -39,7 +48,7 @@ export default function TransaksiBayar() {
 
   // Fungsi untuk menampilkan struk pembayaran
   const handleBayar = () => {
-    if (nominalUang < totalHarga) {
+    if (parseInt(nominalUang) < totalHarga) {
       alert("Nominal uang tidak cukup!");
       return;
     }
@@ -49,7 +58,7 @@ export default function TransaksiBayar() {
       namaPelanggan: namaPelanggan || "Pelanggan Umum",
       items: cart,
       totalHarga,
-      nominalUang,
+      nominalUang: parseInt(nominalUang),
       kembalian,
     });
 

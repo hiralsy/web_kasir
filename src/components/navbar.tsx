@@ -1,13 +1,9 @@
 "use client";
 
-import { Roboto } from "next/font/google";
+
 import { useState } from "react";
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["100", "300", "400", "500", "700", "900"],
-});
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
