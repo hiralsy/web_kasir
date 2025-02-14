@@ -173,7 +173,7 @@ export default function StokBarang() {
         <div className="mt-[92px] h-[calc(100%-92px)] shadow-md rounded-md p-3">
           {/* Input Cari  dan Tambah produk */}
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-semibold">Stok Produk</h1>
+            <h1 className="text-xl font-medium text-[#929291]">Stok Produk</h1>
             <button
               className="px-4 py-2 bg-[#3BB146] text-white rounded-lg hover:bg-gray-300"
               onClick={() => setAddProductModal(true)}
@@ -187,7 +187,7 @@ export default function StokBarang() {
               placeholder="Cari nama produk..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-[60%] p-2 border-2 border-gray-400 rounded-lg focus:border-[#C14600] outline-none"
+              className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-[#C14600] outline-none"
             />
           </div>
 
@@ -195,13 +195,13 @@ export default function StokBarang() {
           <div className="overflow-y-auto max-h-[500px] custom-scrollbar">
             <table className="w-full border border-gray-300">
               {/* Bagian Thead Fixed */}
-              <thead className="bg-[#AAB396] text-white sticky top-0 z-1000">
-                <tr className="text-left">
-                  <th className="p-1 border text-center">ID</th>
-                  <th className="p-1 border text-center">Produk</th>
-                  <th className="p-1 border text-center">Harga</th>
-                  <th className="p-1 border text-center">Stok</th>
-                  <th className="p-1 border text-center">Aksi</th>
+              <thead className="bg-[#AAB396] text-[#4A4947] sticky top-0 z-1000">
+                <tr className="text-center">
+                  <th className="p-1 border">ID</th>
+                  <th className="p-1 border">Produk</th>
+                  <th className="p-1 border">Harga</th>
+                  <th className="p-1 border">Stok</th>
+                  <th className="p-1 border">Aksi</th>
                 </tr>
               </thead>
               {/* Bagian Tbody Scroll */}
@@ -244,14 +244,14 @@ export default function StokBarang() {
                         <td className="w-[15%] p-1 border text-center">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="w-[80px] bg-[#C14600] text-white px-3 py-1 rounded-lg mr-2"
+                            className="w-[80px] bg-[#FF9D23] text-white px-3 py-1 rounded-lg mr-2 hover:bg-gray-300"
                           >
                             Edit
                           </button>
 
                           <button
                             onClick={() => setDeleteProduct(item)}
-                            className="w-[80px] bg-[#D30000] text-white px-3 py-1 rounded-lg"
+                            className="w-[80px] bg-[#D30000] text-white px-3 py-1 rounded-lg hover:bg-gray-300"
                           >
                             Hapus
                           </button>
