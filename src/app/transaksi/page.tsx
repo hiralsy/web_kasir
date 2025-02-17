@@ -146,43 +146,50 @@ export default function Transaksi() {
     setShowConfirm(false);
   };
 
-  const handleBayar = () => {
+  const handleBayar = async () => {
     if (cart.length === 0) {
       setShowEmptyCartAlert(true);
       return;
     }
-
+  
     if (unformatRupiah(nominalUang) < totalHarga) {
       alert("Nominal uang tidak cukup!");
       return;
     }
-
-    // Simpan data transaksi ke struk
-    setStruk({
-      kodeTransaksi: Math.floor(100000 + Math.random() * 900000), // Sekarang menjadi number,
-      tanggal: new Date().toLocaleString("id-ID", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }),
+  
+    const transaksiData = {
       namaPelanggan: namaPelanggan || "Pelanggan Umum",
       items: cart,
       totalHarga,
       nominalUang: unformatRupiah(nominalUang),
       kembalian,
-    });
-
-    // Reset pesanan setelah pembayaran
-    setCart([]);
-    setNominalUang("");
-    setKembalian(0);
-    setNamaPelanggan("");
-    localStorage.removeItem("cart");
+    };
+  
+    try {
+      const response = await fetch("/api/transaksi", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transaksiData),
+      });
+  
+      const result = await response.json();
+      if (result.success) {
+        setStruk(result.transaksi);
+        setCart([]);
+        setNominalUang("");
+        setKembalian(0);
+        setNamaPelanggan("");
+        localStorage.removeItem("cart");
+      } else {
+        alert("Gagal menyimpan transaksi!");
+      }
+    } catch (error) {
+      console.error("Error saat menyimpan transaksi:", error);
+    }
   };
+  
 
   const handleCariPelanggan = () => {
     // Implementasi pencarian pelanggan

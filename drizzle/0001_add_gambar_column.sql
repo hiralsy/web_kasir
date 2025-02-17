@@ -1,0 +1,1 @@
+ALTER TABLE "produk" ADD COLUMN "Gambar" varchar(255);

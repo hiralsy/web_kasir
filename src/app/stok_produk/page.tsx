@@ -1,168 +1,174 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import Image from "next/image";
 
 type Product = {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  image: string;
+  ProdukID: number;
+  NamaProduk: string;
+  Harga: number;
+  Stok: number;
+  Gambar: string;
 };
 
-export default function StokBarang() {
+export default function StokProduk() {
   const [search, setSearch] = useState("");
-
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Croissant Butter",
-      price: 10000,
-      stock: 10,
-      image: "/croissant-butter.jpg",
-    },
-    {
-      id: 2,
-      name: "Slice Cake Chocolate",
-      price: 8000,
-      stock: 5,
-      image: "/slice-cake-chocolate.jpg",
-    },
-    {
-      id: 3,
-      name: "Roti Tawar",
-      price: 15000,
-      stock: 2,
-      image: "/roti-tawar.jpg",
-    },
-  ]);
-
-  // State untuk modal tambah produk
-  const [addProductModal, setAddProductModal] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    stock: "",
-    image: null as File | null,
-    previewImage: null as string | null,
+    NamaProduk: "",
+    Harga: "",
+    Stok: "",
+    Gambar: null as File | null,
   });
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string>("");
 
-  // Fungsi untuk menangani perubahan input tambah produk
-  const handleNewProductChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    setNewProduct({ ...newProduct, [field]: e.target.value });
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("/api/produk");
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Fungsi untuk menangani upload gambar produk baru
-  const handleNewProductImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setNewProduct({
-        ...newProduct,
-        image: file,
-        previewImage: URL.createObjectURL(file),
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("NamaProduk", newProduct.NamaProduk);
+    formData.append("Harga", newProduct.Harga.replace(/\D/g, "")); // Hapus titik dan koma
+    formData.append("Stok", newProduct.Stok);
+    if (newProduct.Gambar) {
+      formData.append("Gambar", newProduct.Gambar);
+    }
+
+    try {
+      await axios.post("/api/produk", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      fetchProducts();
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error uploading product:", error);
     }
   };
 
-  // Fungsi untuk menyimpan produk baru
-  const handleSaveNewProduct = () => {
-    if (!newProduct.name || !newProduct.price || !newProduct.stock) {
-      alert("Harap lengkapi semua bidang!");
-      return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "Harga") {
+      // Hapus semua karakter non-digit
+      let rawValue = value.replace(/\D/g, "");
+
+      // Format angka dengan titik sebagai pemisah ribuan
+      let formattedValue = new Intl.NumberFormat("id-ID").format(
+        parseInt(rawValue) || 0
+      );
+
+      setNewProduct((prev) => ({
+        ...prev,
+        [name]: formattedValue, // Simpan nilai yang diformat untuk tampilan
+      }));
+    } else {
+      setNewProduct((prev) => ({ ...prev, [name]: value }));
     }
-
-    const newId = products.length + 1;
-    setProducts([
-      ...products,
-      {
-        id: newId,
-        name: newProduct.name,
-        price: Number(newProduct.price),
-        stock: Number(newProduct.stock),
-        image: newProduct.previewImage || "/placeholder.jpg", // Gunakan gambar placeholder jika tidak ada
-      },
-    ]);
-
-    // Reset state modal dan tutup modal
-    setNewProduct({
-      name: "",
-      price: "",
-      stock: "",
-      image: null,
-      previewImage: null,
-    });
-    setAddProductModal(false);
   };
 
-  // State untuk barang yang sedang diedit
-  const [editProduct, setEditProduct] = useState<null | any>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // Saat user memilih file gambar baru
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
 
-  // Fungsi untuk menangani edit produk
+    const file = e.target.files[0];
+    setNewProduct((prev) => ({ ...prev, Gambar: file }));
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+  // Saat klik edit, pastikan newProduct berisi data produk yang dipilih
   const handleEdit = (item: Product) => {
-    setEditProduct(item); // Set produk yang sedang diedit
-    setPreviewImage(item.image); // Set preview gambar
+    setEditProduct(item);
+    setNewProduct({
+      NamaProduk: item.NamaProduk,
+      Harga: item.Harga.toString().replace(/\D/g, ""), // Pastikan hanya angka
+      Stok: item.Stok.toString(),
+      Gambar: null, // Kosongkan dulu, user bisa memilih gambar baru
+    });
+    setPreviewImage(item.Gambar); // Tetapkan gambar lama untuk preview
+    setShowModal(true);
   };
 
-  // State untuk konfirmasi hapus produk
-  const [deleteProduct, setDeleteProduct] = useState<null | any>(null);
-
-  // Fungsi hapus produk
-  const handleDelete = () => {
-    if (!deleteProduct) return;
-
-    setProducts((prevProducts) =>
-      prevProducts.filter((item: Product) => item.id !== deleteProduct.id)
-    );
-    setDeleteProduct(null);
-  };
-
-  // Fungsi edit input
-  const handleEditChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
+  // Fungsi update produk
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editProduct) return;
-    setEditProduct({ ...editProduct, [field]: e.target.value });
-  };
 
-  // Fungsi untuk menangani upload file gambar
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
+    const formData = new FormData();
+    formData.append("NamaProduk", newProduct.NamaProduk);
+    formData.append("Harga", newProduct.Harga.replace(/\D/g, "")); // Hanya angka
+    formData.append("Stok", newProduct.Stok);
+
+    if (newProduct.Gambar) {
+      formData.append("Gambar", newProduct.Gambar); // Jika ada gambar baru, upload
+    }
+
+    try {
+      const response = await axios.put(
+        `/api/produk/${editProduct.ProdukID}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchProducts(); // Refresh data
+        setShowModal(false);
+        setEditProduct(null);
+        setPreviewImage("");
+      } else {
+        console.error("Gagal mengupdate produk:", response);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
     }
   };
 
-  // Fungsi simpan hasil edit produk
-  const handleSaveEdit = () => {
-    setProducts((prevProducts) =>
-      prevProducts.map((item) =>
-        item.id === editProduct.id
-          ? {
-              ...item,
-              name: editProduct.name,
-              price: Number(editProduct.price),
-              stock: Number(editProduct.stock),
-              image: previewImage || item.image, // Simpan preview atau gambar lama
-            }
-          : item
-      )
-    );
-    setEditProduct(null);
-    setPreviewImage(null);
-    setSelectedFile(null);
+  const handleDelete = async () => {
+    if (deleteProduct) {
+      try {
+        const response = await axios.delete(
+          `/api/produk?id=${deleteProduct.ProdukID}`
+        );
+        if (response.status === 200) {
+          setProducts(
+            products.filter(
+              (product) => product.ProdukID !== deleteProduct.ProdukID
+            )
+          );
+          alert("Produk berhasil dihapus!");
+        } else {
+          alert("Gagal menghapus produk");
+        }
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("Terjadi kesalahan saat menghapus produk");
+      } finally {
+        setDeleteProduct(null);
+      }
+    }
   };
 
   return (
@@ -171,16 +177,16 @@ export default function StokBarang() {
       <div className="flex-1">
         <Navbar />
         <div className="mt-[92px] h-[calc(100%-92px)] shadow-md rounded-md p-3">
-          {/* Input Cari  dan Tambah produk */}
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-xl font-medium text-[#929291]">Stok Produk</h1>
             <button
-              className="px-4 py-2 bg-[#3BB146] text-white rounded-lg hover:bg-gray-300"
-              onClick={() => setAddProductModal(true)}
+              className="px-4 py-2 bg-[#3BB146] text-white rounded-lg"
+              onClick={() => setShowModal(true)}
             >
               Tambahkan Produk
             </button>
           </div>
+
           <div className="flex justify-between items-center my-4">
             <input
               type="text"
@@ -191,11 +197,9 @@ export default function StokBarang() {
             />
           </div>
 
-          {/* Tabel Stok Barang */}
-          <div className="overflow-y-auto max-h-[500px] custom-scrollbar">
-            <table className="w-full border border-gray-300">
-              {/* Bagian Thead Fixed */}
-              <thead className="bg-[#AAB396] text-[#4A4947] sticky top-0 z-1000">
+          <div className="overflow-x-auto max-h-[500px] custom-scrollbar">
+            <table className="w-full border border-gray-300 shadow-md rounded-lg">
+              <thead className="bg-[#AAB396] text-[#4A4947]">
                 <tr className="text-center">
                   <th className="p-1 border">ID</th>
                   <th className="p-1 border">Produk</th>
@@ -204,8 +208,7 @@ export default function StokBarang() {
                   <th className="p-1 border">Aksi</th>
                 </tr>
               </thead>
-              {/* Bagian Tbody Scroll */}
-              <tbody className="">
+              <tbody>
                 {products.length === 0 ? (
                   <tr>
                     <td
@@ -218,28 +221,36 @@ export default function StokBarang() {
                 ) : (
                   products
                     .filter((item) =>
-                      item.name.toLowerCase().includes(search.toLowerCase())
+                      item.NamaProduk.toLowerCase().includes(
+                        search.toLowerCase()
+                      )
                     )
                     .map((item) => (
-                      <tr key={item.id} className="w-[100%]">
+                      <tr key={item.ProdukID} className="w-[100%]">
                         <td className="w-[5%] p-1 border text-center">
-                          {item.id}
+                          {item.ProdukID}
                         </td>
-                        <td className="w-full p-1 border-b flex items-center gap-2">
+                        <td className="w-full p-1 flex items-center border-b gap-2">
                           <Image
-                            src={item.image}
-                            alt={item.name}
+                            src={item.Gambar}
+                            alt={item.NamaProduk}
                             width={50}
                             height={50}
-                            className="w-[64px] h-[64px] rounded-md object-cover"
+                            className="bg-pink-400 rounded-md w-[64px] h-[64px] object-cover"
                           />
-                          <p className="line-clamp-1">{item.name}</p>
+                          <p className="font-medium line-clamp-1">
+                            {item.NamaProduk}
+                          </p>
                         </td>
                         <td className="w-[15%] px-2 py-1 border">
-                          Rp{item.price.toLocaleString("id-ID")}
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 2, // Tanpa desimal
+                          }).format(item.Harga)}
                         </td>
                         <td className="w-[10%] p-1 border text-center">
-                          {item.stock}
+                          {item.Stok}
                         </td>
                         <td className="w-[15%] p-1 border text-center">
                           <button
@@ -248,7 +259,6 @@ export default function StokBarang() {
                           >
                             Edit
                           </button>
-
                           <button
                             onClick={() => setDeleteProduct(item)}
                             className="w-[80px] bg-[#D30000] text-white px-3 py-1 rounded-lg hover:bg-gray-300"
@@ -262,182 +272,174 @@ export default function StokBarang() {
               </tbody>
             </table>
           </div>
+
+          {showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-[9999]">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Tambah Produk
+                </h2>
+
+                <p className="text-[14px] text-gray-400">Nama Produk</p>
+                <input
+                  type="text"
+                  name="NamaProduk"
+                  placeholder="Nama Produk"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.NamaProduk}
+                  onChange={handleChange}
+                />
+
+                <p className="text-[14px] text-gray-400">Harga Produk</p>
+                <input
+                  type="text"
+                  name="Harga"
+                  placeholder="Harga"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.Harga}
+                  onChange={handleChange}
+                />
+
+                <p className="text-[14px] text-gray-400">Stok Produk</p>
+                <input
+                  type="number"
+                  name="Stok"
+                  placeholder="Stok"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.Stok}
+                  onChange={handleChange}
+                />
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                {previewImage && (
+                  <Image
+                    src={previewImage}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
+                  />
+                )}
+                <div className="flex justify-between mt-4">
+                  <button
+                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={editProduct ? handleUpdate : handleSubmit}
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showModal && !editProduct && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-[9999]">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Tambah Produk
+                </h2>
+                {/* Form fields */}
+                <p className="text-[14px] text-gray-400">Nama Produk</p>
+                <input
+                  type="text"
+                  name="NamaProduk"
+                  placeholder="Nama Produk"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.NamaProduk}
+                  onChange={handleChange}
+                />
+                <p className="text-[14px] text-gray-400">Harga Produk</p>
+                <input
+                  type="text"
+                  name="Harga"
+                  placeholder="Harga"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.Harga}
+                  onChange={handleChange}
+                />
+                <p className="text-[14px] text-gray-400">Stok Produk</p>
+                <input
+                  type="number"
+                  name="Stok"
+                  placeholder="Stok"
+                  className="w-full p-2 border mb-2"
+                  value={newProduct.Stok}
+                  onChange={handleChange}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                {previewImage && (
+                  <Image
+                    src={previewImage}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
+                  />
+                )}
+                <div className="flex justify-between mt-4">
+                  <button
+                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={editProduct ? handleUpdate : handleSubmit}
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {deleteProduct && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-[9999]">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Hapus Produk
+                </h2>
+                <p className="text-gray-600">
+                  Apakah Anda yakin ingin menghapus{" "}
+                  <span className="font-semibold">
+                    {deleteProduct.NamaProduk}
+                  </span>
+                  ?
+                </p>
+                <div className="flex justify-between mt-4">
+                  <button
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                    onClick={() => setDeleteProduct(null)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                    onClick={handleDelete}
+                  >
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Modal Tambah Produk */}
-      {addProductModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-9999">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Tambah Produk
-            </h2>
-
-            {/* Preview Gambar */}
-            <p className="text-[14px] text-gray-400">Gambar Produk</p>
-            {newProduct.previewImage && (
-              <Image
-                src={newProduct.previewImage}
-                alt="Preview"
-                width={100}
-                height={100}
-                className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
-              />
-            )}
-
-            {/* Input Upload Gambar */}
-            <input
-              type="file"
-              accept="image/*"
-              className="mb-3"
-              onChange={handleNewProductImageUpload}
-            />
-
-            <p className="text-[14px] text-gray-400">Nama Produk</p>
-            <input
-              type="text"
-              value={newProduct.name}
-              onChange={(e) => handleNewProductChange(e, "name")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Nama Produk"
-            />
-
-            <p className="text-[14px] text-gray-400">Harga Produk</p>
-            <input
-              type="number"
-              value={newProduct.price}
-              onChange={(e) => handleNewProductChange(e, "price")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Harga"
-            />
-
-            <p className="text-[14px] text-gray-400">Stok Produk</p>
-            <input
-              type="number"
-              value={newProduct.stock}
-              onChange={(e) => handleNewProductChange(e, "stock")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Stok"
-            />
-
-            <div className="flex justify-between">
-              <button
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                onClick={() => setAddProductModal(false)}
-              >
-                Batal
-              </button>
-              <button
-                className="px-4 py-2 bg-green-500 text-white rounded-lg"
-                onClick={handleSaveNewProduct}
-              >
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Edit Barang */}
-      {editProduct && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-9999">
-            <h2 className="text-xl font-bold text-gray-800 border-b-2 mb-3 pb-2">
-              Edit Produk
-            </h2>
-
-            {/* Preview Gambar */}
-            <p className="text-[14px] text-gray-400">Gambar Produk</p>
-            {previewImage && (
-              <Image
-                src={previewImage}
-                alt="Preview"
-                width={100}
-                height={100}
-                className="w-full aspect-[16/9] mb-3 rounded-md object-contain"
-              />
-            )}
-
-            {/* Input Upload Gambar */}
-            <input
-              type="file"
-              accept="image/*"
-              className="mb-3"
-              onChange={handleImageUpload}
-            />
-
-            <p className="text-[14px] text-gray-400">Nama Produk</p>
-            <input
-              type="text"
-              value={editProduct.name}
-              onChange={(e) => handleEditChange(e, "name")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Nama Produk"
-            />
-
-            <p className="text-[14px] text-gray-400">Harga Produk</p>
-            <input
-              type="number"
-              value={editProduct.price}
-              onChange={(e) => handleEditChange(e, "price")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Harga"
-            />
-
-            <p className="text-[14px] text-gray-400">Stok Produk</p>
-            <input
-              type="number"
-              value={editProduct.stock}
-              onChange={(e) => handleEditChange(e, "stock")}
-              className="w-full p-2 border rounded-lg mb-3"
-              placeholder="Stok"
-            />
-            <div className="flex justify-between w-[100%] space-x-3">
-              <button
-                className="w-[50%] px-4 py-2 bg-gray-500 text-white rounded-lg"
-                onClick={() => setEditProduct(null)}
-              >
-                Batal
-              </button>
-              <button
-                className="w-[50%] px-4 py-2 bg-green-500 text-white rounded-lg"
-                onClick={handleSaveEdit}
-              >
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Konfirmasi Hapus */}
-      {deleteProduct && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] z-[9999]">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Hapus Produk
-            </h2>
-            <p className="text-gray-600">
-              Apakah Anda yakin ingin menghapus{" "}
-              <span className="font-semibold">{deleteProduct.name}</span>?
-            </p>
-            <div className="flex justify-between mt-4">
-              <button
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                onClick={() => setDeleteProduct(null)}
-              >
-                Batal
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                onClick={handleDelete}
-              >
-                Hapus
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

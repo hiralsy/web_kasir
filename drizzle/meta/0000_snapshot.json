@@ -1,0 +1,284 @@
+{
+  "id": "08aaf067-dedb-4212-9086-77d26d2dd3cd",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.detailpenjualan": {
+      "name": "detailpenjualan",
+      "schema": "",
+      "columns": {
+        "DetailID": {
+          "name": "DetailID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "PenjualanID": {
+          "name": "PenjualanID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ProdukID": {
+          "name": "ProdukID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "JumlahProduk": {
+          "name": "JumlahProduk",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Subtotal": {
+          "name": "Subtotal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "detailpenjualan_PenjualanID_penjualan_PenjualanID_fk": {
+          "name": "detailpenjualan_PenjualanID_penjualan_PenjualanID_fk",
+          "tableFrom": "detailpenjualan",
+          "tableTo": "penjualan",
+          "columnsFrom": [
+            "PenjualanID"
+          ],
+          "columnsTo": [
+            "PenjualanID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "detailpenjualan_ProdukID_produk_ProdukID_fk": {
+          "name": "detailpenjualan_ProdukID_produk_ProdukID_fk",
+          "tableFrom": "detailpenjualan",
+          "tableTo": "produk",
+          "columnsFrom": [
+            "ProdukID"
+          ],
+          "columnsTo": [
+            "ProdukID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pelanggan": {
+      "name": "pelanggan",
+      "schema": "",
+      "columns": {
+        "PelangganID": {
+          "name": "PelangganID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "NamaPelanggan": {
+          "name": "NamaPelanggan",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Alamat": {
+          "name": "Alamat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NomorTelepon": {
+          "name": "NomorTelepon",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.penjualan": {
+      "name": "penjualan",
+      "schema": "",
+      "columns": {
+        "PenjualanID": {
+          "name": "PenjualanID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "TanggalPenjualan": {
+          "name": "TanggalPenjualan",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TotalHarga": {
+          "name": "TotalHarga",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PelangganID": {
+          "name": "PelangganID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UserID": {
+          "name": "UserID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "penjualan_PelangganID_pelanggan_PelangganID_fk": {
+          "name": "penjualan_PelangganID_pelanggan_PelangganID_fk",
+          "tableFrom": "penjualan",
+          "tableTo": "pelanggan",
+          "columnsFrom": [
+            "PelangganID"
+          ],
+          "columnsTo": [
+            "PelangganID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "penjualan_UserID_user_UserID_fk": {
+          "name": "penjualan_UserID_user_UserID_fk",
+          "tableFrom": "penjualan",
+          "tableTo": "user",
+          "columnsFrom": [
+            "UserID"
+          ],
+          "columnsTo": [
+            "UserID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.produk": {
+      "name": "produk",
+      "schema": "",
+      "columns": {
+        "ProdukID": {
+          "name": "ProdukID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "NamaProduk": {
+          "name": "NamaProduk",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Harga": {
+          "name": "Harga",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Stok": {
+          "name": "Stok",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "UserID": {
+          "name": "UserID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "NamaLengkap": {
+          "name": "NamaLengkap",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Username": {
+          "name": "Username",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Password": {
+          "name": "Password",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "HakAkses": {
+          "name": "HakAkses",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_Username_unique": {
+          "name": "user_Username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "Username"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
